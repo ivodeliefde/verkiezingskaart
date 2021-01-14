@@ -1,0 +1,23 @@
+{
+        "Waadhoeke": ["Franekeradeel", "het Bildt", "Menaldumadeel"],
+        "Noardeast-Fryslân": ["Dongeradeel", "Ferwerderadiel", "Kollumerland", "Nieuwkruisland"],
+        "Het Hogeland": ["Bedum", "De Marne", "Eemsmond", "Winsum"],
+        "Westerkwartier": ["Grootegast", "Leek", "Marum", "Zuidhorn"],
+        "Eemsdelta": ["Appingedam", "Delfzijl", "Loppersum"],
+        "Midden-Groningen": ["Hoogezand-Sappemeer", "Menterwolde", "Slochteren"],
+        "Westerwolde": ["Bellingwedde", "Vlagtwedde"],
+        "Beekdaelen": ["Nuth", "Onderbanken", "Schinnen"],
+        "West Betuwe": ["Geldermalsen", "Lingewaal", "Neerijnen"],
+        "Altena": ["Aalburg", "Werkendam", "Woudrichem"],
+        "Hoeksche Waard": ["Binnenmaas", "Cromstrijen", "Korendijk", "Oud-Beijerland", "Strijen"],
+        "Molenlanden": ["Giessenlanden", "Molenwaard"],
+        "Vijfheerenlanden": ["Leerdam", "Zederik", "Vianen"],
+        "Noordwijk": ["Noordwijkerhout"],
+        "Haarlemmermeer": ["Haarlemmerliede", "Spaarnwoude"],
+        "Groningen": ["Haren", "Ten Boer", "Meerstad"],
+        "Zevenaar": ["Rijnwaarden"],
+        "Meierijstad": ["Schijndel", "Sint-Oedenrode", "Veghel"],
+        "Gooise Meren": [ "Bussum", "Muiden", "Naarden"],
+        "Edam-Volendam": ["Zeevang"],
+        "Nissewaard": ["Bernisse","Spijkenisse"]
+}
