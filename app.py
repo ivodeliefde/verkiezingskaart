@@ -20,9 +20,12 @@ resultaat = {
 
 
 gemeenten = gpd.read_file(os.path.join(os.getcwd(), "data", "municipalities_simplified_2.geojson"))
+gemeenten = gemeenten.merge(uitslag, on="gemeentenaam")
 
 col1, col2 = st.beta_columns([4,3])
 col3, col4, col5 = st.beta_columns([1,3,3])
+
+st.write(uitslag)
 
 with col3:
     statistiek = st.radio(
@@ -40,7 +43,6 @@ with col3:
     partij = st.selectbox(
         'Partij',
         (partijen))
-
 
 with col1:
     st.title("Verkiezingen Tweede Kamer 2021")
@@ -62,16 +64,22 @@ with col2:
                    attr='© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> <a href="https://www.mapbox.com/map-feedback/">(Improve this map)</a>',
                    height=485)
 
+
     choropleth = folium.Choropleth(geo_data = gemeenten,
                  data=uitslag,
-                 columns=['gemeentenaam', resultaat[statistiek]],
+                 columns=['gemeentenaam', f"Percentage {resultaat[statistiek]}"],
                  key_on='feature.properties.gemeentenaam',
-                 fill_color='YlGnBu',
-                 # bins = list(range(0, int(uitslag_totaal_stemmen["Aantal stemmen"].max()), 50000)),
-                 fill_opacity=0.4,
+                 # fill_color='YlGnBu',
+                 bins = list(range(0, 51, 10)),
+                 # fill_opacity=0.4,
                  line_opacity=0.2,
                  legend_name=resultaat[statistiek],
                  smooth_factor=1).add_to(m)
+
+    # choropleth = folium.GeoJson(
+    #         data = gemeenten,
+    #         fill_color='YlGnBu',
+    #         smooth_factor=1).add_to(m)
 
     choropleth.geojson.add_child(
         folium.features.GeoJsonTooltip(['gemeentenaam'])

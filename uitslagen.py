@@ -63,9 +63,13 @@ vorige_uitslag = corrigeer_gemeentelijke_herindeling(vorige_uitslag)
 vorige_uitslag = hernoem_dubbele_gemeentenamen(vorige_uitslag)
 
 # Voorbewerking uitslagendata
+for p in partijen:
+    uitslag[f"Percentage {p}"] = uitslag[p] / uitslag["GeldigeStemmen"] * 100
+
 uitslag_long = pd.melt(uitslag, id_vars=["gemeentenaam"], value_vars=partijen)
 uitslag_totaal_stemmen = uitslag_long.groupby("variable").sum().reset_index()
 uitslag_totaal_stemmen.columns = ["Partij", "Aantal stemmen"]
+uitslag_totaal_stemmen["Percentage stemmen"] = uitslag_totaal_stemmen["Aantal stemmen"] / uitslag["GeldigeStemmen"].sum() * 100
 
 verschil_partijen = list(set(partijen).intersection(set(vorige_uitslag.columns)))
 nieuwe_partijen = list(set(partijen).difference(set(verschil_partijen)))
