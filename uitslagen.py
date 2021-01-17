@@ -47,6 +47,7 @@ def hernoem_dubbele_gemeentenamen(uitslag):
 # Lees uitslag in
 uitslag = pd.read_csv(os.path.join(os.getcwd(), "data", "2017_per_gemeente.csv"), sep=";")
 uitslag.rename(columns={"RegioNaam":"gemeentenaam"}, inplace=True)
+uitslag = uitslag.loc[uitslag.OuderRegioCode != "K20"]
 
 # Kolommen voor partijstemmen en overige steminformatie
 partijen = list(uitslag.loc[:, "VVD":].columns)

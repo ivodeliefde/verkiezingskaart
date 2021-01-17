@@ -10,7 +10,11 @@ import folium
 from uitslagen import uitslag, uitslag_totaal_stemmen, partijen, stemgedrag, uitslag_verschil_stemmen
 
 
-st.set_page_config(layout="wide")
+st.set_page_config(
+    page_title="Verkiezingskaart 2021",
+     # page_icon="🧊",
+     layout="wide",
+     initial_sidebar_state="expanded")
 
 resultaat = {
     "Grootste Partij" : uitslag_totaal_stemmen.loc[uitslag_totaal_stemmen["Aantal stemmen"] == uitslag_totaal_stemmen["Aantal stemmen"].max(), "Partij"].values[0],
@@ -22,7 +26,7 @@ resultaat = {
 gemeenten = gpd.read_file(os.path.join(os.getcwd(), "data", "municipalities_simplified_2.geojson"))
 gemeenten = gemeenten.merge(uitslag, on="gemeentenaam")
 
-
+st.sidebar.write("### Selecteer een partij")
 statistiek = st.sidebar.radio(
     "",
     ('Grootste Partij', 'Grootste Winnaar', 'Grootste Verliezer'))
@@ -31,13 +35,17 @@ statistiek = st.sidebar.radio(
 #     "",
 #     ('Gemeentegrenzen', 'Gemeenten als Cartogram'))
 
-gemeente = st.sidebar.selectbox(
-    'Gemeente',
-    (gemeenten.gemeentenaam.sort_values()))
-
 partij = st.sidebar.selectbox(
     'Partij',
-    (partijen))
+    (partijen),
+    partijen.index(resultaat[statistiek])
+)
+
+st.sidebar.write("### Selecteer een gemeente")
+gemeente = st.sidebar.selectbox(
+    'Gemeente',
+    (gemeenten.gemeentenaam))
+
 
 st.title("Verkiezingen Tweede Kamer 2021")
 
@@ -45,7 +53,7 @@ st.write(alt.Chart(uitslag_totaal_stemmen, width=1000, height=485).mark_bar().en
     x=alt.X('Partij', sort="-y"),
     y='Aantal stemmen',
     color=alt.condition(
-        alt.datum.Partij == resultaat[statistiek],
+        alt.datum.Partij == partij,
         alt.value('red'),
         alt.value('lightgrey')
     )
@@ -60,23 +68,36 @@ m = folium.Map(location=[52.35, 5.3878],
 
 choropleth = folium.Choropleth(geo_data = gemeenten,
              data=uitslag,
-             columns=['gemeentenaam', f"Percentage {resultaat[statistiek]}"],
+             columns=['gemeentenaam', f"Percentage {partij}"],
              key_on='feature.properties.gemeentenaam',
-             # fill_color='YlGnBu',
+             fill_color='YlGnBu',
              bins = list(range(0, 51, 10)),
-             # fill_opacity=0.4,
+             fill_opacity=0.5,
              line_opacity=0.2,
-             legend_name=resultaat[statistiek],
+             # line_color="black",
+             legend_name=f"Percentage stemmen voor {partij} per gemeente.",
              smooth_factor=1).add_to(m)
 
-# choropleth = folium.GeoJson(
-#         data = gemeenten,
-#         fill_color='YlGnBu',
-#         smooth_factor=1).add_to(m)
+style_function = lambda x: {
+                                    'fillOpacity':0,
+                            'lineColor':'#0000ff'}
+
+highlight_gemeente = folium.GeoJson(
+        data = gemeenten.loc[gemeenten["gemeentenaam"] == gemeente,:],
+        # fill_opacity=0,
+        # line_opacity = 1,
+        # line_color = "red",
+        style_function=style_function,
+        smooth_factor=1).add_to(m)
 
 choropleth.geojson.add_child(
-    folium.features.GeoJsonTooltip(['gemeentenaam'])
+    folium.features.GeoJsonTooltip(['gemeentenaam', f'Percentage {partij}'])
 )
+
+highlight_gemeente.add_child(
+    folium.features.GeoJsonTooltip(['gemeentenaam', f'Percentage {partij}'])
+)
+
 
 folium_static(m)
 
