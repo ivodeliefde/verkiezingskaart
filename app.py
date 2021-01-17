@@ -25,6 +25,7 @@ resultaat = {
 
 gemeenten = gpd.read_file(os.path.join(os.getcwd(), "data", "municipalities_simplified_2.geojson"))
 gemeenten = gemeenten.merge(uitslag, on="gemeentenaam")
+gemeentenamen = list(gemeenten.gemeentenaam.sort_values())
 
 st.sidebar.write("### Selecteer een partij")
 statistiek = st.sidebar.radio(
@@ -44,7 +45,7 @@ partij = st.sidebar.selectbox(
 st.sidebar.write("### Selecteer een gemeente")
 gemeente = st.sidebar.selectbox(
     'Gemeente',
-    (gemeenten.gemeentenaam))
+    (gemeentenamen))
 
 
 st.title("Verkiezingen Tweede Kamer 2021")
