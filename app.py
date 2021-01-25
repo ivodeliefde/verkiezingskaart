@@ -23,7 +23,8 @@ resultaat = {
 }
 
 
-gemeenten = gpd.read_file(os.path.join(os.getcwd(), "data", "municipalities_simplified_2.geojson"))
+gemeenten = gpd.read_file(os.path.join(os.getcwd(), "data", "municipalities_simplified_16.geojson"))
+gemeenten.rename(columns={"GM_NAAM": "gemeentenaam"}, inplace=True)
 gemeenten = gemeenten.merge(uitslag, on="gemeentenaam")
 gemeentenamen = list(gemeenten.gemeentenaam.sort_values())
 
@@ -60,8 +61,9 @@ st.write(alt.Chart(uitslag_totaal_stemmen, width=1000, height=485).mark_bar().en
     )
 ).configure_axisX(labelAngle=-45))
 
-m = folium.Map(location=[52.35, 5.3878],
-               zoom_start=7,
+coords = list(gemeenten.loc[gemeenten.gemeentenaam == gemeente, "geometry"].centroid.apply(lambda x: list(x.coords)))[0]
+m = folium.Map(location=[coords[0][1], coords[0][0]],
+               zoom_start=9,
                tiles='https://api.mapbox.com/styles/v1/ivo11235/ckjx01y2e1brw17nqdictt5wk/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiaXZvMTEyMzUiLCJhIjoieV82bFVfNCJ9.G8mrfJOA07edDDj6Bep2bQ',
                attr='© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> <a href="https://www.mapbox.com/map-feedback/">(Improve this map)</a>',
                height=485)
